@@ -1,10 +1,10 @@
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, render_template_string, request, jsonify, redirect
 import os
 
 app = Flask(__name__)
 messages = []
 
-HTML = '''
+BASE_HTML = '''
 <!doctype html>
 <html>
 <head>
@@ -12,6 +12,8 @@ HTML = '''
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{font-family:Arial; padding:20px; background:#f0f0f0; margin:0}
+.nav{text-align:center; margin-bottom:15px}
+.nav a{margin:0 10px; text-decoration:none; color:#007bff; font-weight:bold}
 h2{text-align:center; color:#333}
 #chat{border:1px solid #ccc; height:350px; overflow-y:scroll; padding:10px; background:white; margin-bottom:10px; border-radius:8px}
 #input-box{display:flex; flex-direction:column; gap:10px}
@@ -23,9 +25,19 @@ p{margin:5px 0; padding:10px; border-radius:10px; max-width:70%}
 .me{background:#d1e7ff; margin-left:auto; text-align:right}
 .other{background:#e9ecef; margin-right:auto; text-align:left}
 b{color:#004085}
+.setting-box{background:white; padding:20px; border-radius:8px}
 </style>
 </head>
 <body>
+<div class="nav">
+<a href="/">Chat</a> | <a href="/settings">Settings</a>
+</div>
+{{content}}
+</body>
+</html>
+'''
+
+CHAT_HTML = '''
 <h2>Ka Chat App - Live Chat</h2>
 <div id="chat"></div>
 <div id="input-box">
@@ -38,6 +50,9 @@ b{color:#004085}
 
 <script>
 let myName = localStorage.getItem("myName") || "";
+let myColor = localStorage.getItem("myColor") || "#d1e7ff";
 
 function loadMessages(){
-  fetch('/messages').then(r=>r
+  fetch('/messages').then(r=>r.json()).then(data=>{
+    let chat = document.getElementById("chat");
+    chat.inner

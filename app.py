@@ -1,6 +1,8 @@
 from flask import Flask, render_template_string
 from flask_socketio import SocketIO, emit
 import eventlet
+import os
+
 eventlet.monkey_patch()
 
 app = Flask(__name__)
@@ -10,19 +12,27 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 HTML = '''
 <!doctype html>
 <html>
-<head><title>Ka Chat App</title>
+<head>
+<title>Ka Chat App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{font-family:Arial; padding:20px; background:#f0f0f0}
-#chat{border:1px solid #ccc; height:400px; overflow-y:scroll; padding:10px; background:white; margin-bottom:10px}
-input{width:80%; padding:10px}
-button{padding:10px 20px; background:#007bff; color:white; border:none}
+body{font-family:Arial; padding:20px; background:#f0f0f0; margin:0}
+h2{text-align:center; color:#333}
+#chat{border:1px solid #ccc; height:400px; overflow-y:scroll; padding:10px; background:white; margin-bottom:10px; border-radius:8px}
+#input-box{display:flex; gap:10px}
+input{flex:1; padding:12px; border:1px solid #ccc; border-radius:5px}
+button{padding:12px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer}
+button:hover{background:#0056b3}
+p{margin:5px 0}
 </style>
 </head>
 <body>
 <h2>Ka Chat App - Live Chat</h2>
 <div id="chat"></div>
-<input id="msg" placeholder="Thu ziak rawh...">
+<div id="input-box">
+<input id="msg" placeholder="Thu ziak rawh..." autocomplete="off">
 <button onclick="send()">Thawn</button>
+</div>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
@@ -58,7 +68,5 @@ def handle_message(msg):
     emit('message', msg, broadcast=True)
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=10000)    return render_template_string(HTML)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 5000))
+    socketio.run(app, host="0.0.0.0", port=port)

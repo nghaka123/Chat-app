@@ -1,6 +1,7 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request, jsonify
 import os
 app = Flask(__name__)
+messages = []
 
 BASE_HTML = '''
 <!doctype html>
@@ -13,7 +14,12 @@ body{font-family:Arial; padding:20px; background:#f0f0f0; margin:0}
 .nav{text-align:center; margin-bottom:15px; background:white; padding:10px; border-radius:8px}
 .nav a{margin:0 10px; text-decoration:none; color:#007bff; font-weight:bold}
 .nav a:hover{text-decoration:underline}
-.box{background:white; padding:20px; border-radius:8px}
+.box{background:white; padding:20px; border-radius:8px; text-align:center}
+button{padding:12px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer}
+#chat{border:1px solid #ccc; height:350px; overflow-y:scroll; padding:10px; background:white; margin-bottom:10px; border-radius:8px}
+p{margin:5px 0; padding:10px; border-radius:10px; max-width:70%}
+.me{background:#d1e7ff; margin-left:auto; text-align:right}
+.other{background:#e9ecef; margin-right:auto; text-align:left}
 </style>
 </head>
 <body>
@@ -23,7 +29,7 @@ body{font-family:Arial; padding:20px; background:#f0f0f0; margin:0}
 <a href="/settings">Settings</a> | 
 <a href="/about">About</a>
 </div>
-{{content}}
+{{ content|safe }}
 </body>
 </html>
 '''
@@ -44,9 +50,9 @@ ABOUT_HTML = '''
 </div>
 '''
 
-# I chat leh settings code hlui kha hetah dah zel
-CHAT_HTML = ''' ... i chat code hlui ... '''
-SETTING_HTML = ''' ... i settings code hlui ... '''
+# I CHAT leh SETTINGS code hlui kha hetah dah rawh
+CHAT_HTML = '''...i chat code v8.0 kha...'''
+SETTING_HTML = '''...i settings code v9.0 kha...'''
 
 @app.route("/")
 def home():
@@ -64,7 +70,16 @@ def settings():
 def about():
     return render_template_string(BASE_HTML, content=ABOUT_HTML)
 
-# /messages, /send, /clear api te pawh a ngai tho
+@app.route("/messages")
+def get_messages():
+    return jsonify(messages)
+
+@app.route("/send", methods=["POST"])
+def send_message():
+    data = request.get_json()
+    messages.append((data['name'], data['msg']))
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

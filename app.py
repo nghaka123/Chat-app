@@ -7,7 +7,7 @@ eventlet.monkey_patch()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', transports=['polling'])
 
 HTML = '''
 <!doctype html>
@@ -16,25 +16,7 @@ HTML = '''
 <title>Ka Chat App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{font-family:Arial; padding:20px; background:#f0f0f0; margin:0}
-h2{text-align:center; color:#333}
-#chat{border:1px solid #ccc; height:400px; overflow-y:scroll; padding:10px; background:white; margin-bottom:10px; border-radius:8px}
-#input-box{display:flex; gap:10px}
-input{flex:1; padding:12px; border:1px solid #ccc; border-radius:5px}
-button{padding:12px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer}
-button:hover{background:#0056b3}
-p{margin:5px 0}
-</style>
-</head>
-<body>
-<h2>Ka Chat App - Live Chat</h2>
-<div id="chat"></div>
-<div id="input-box">
-<input id="msg" placeholder="Thu ziak rawh..." autocomplete="off">
-<button onclick="send()">Thawn</button>
-</div>
-
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+body{font-family:Arial; padding:20px; background<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
 var socket = io();
 

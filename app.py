@@ -19,7 +19,9 @@ h2{text-align:center; color:#333}
 input{flex:1; padding:12px; border:1px solid #ccc; border-radius:5px}
 button{padding:12px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer}
 button:hover{background:#0056b3}
-p{margin:5px 0; padding:8px; background:#d1e7ff; border-radius:5px}
+p{margin:5px 0; padding:10px; border-radius:10px; max-width:70%}
+.me{background:#d1e7ff; margin-left:auto; text-align:right}
+.other{background:#e9ecef; margin-right:auto; text-align:left}
 b{color:#004085}
 </style>
 </head>
@@ -35,59 +37,7 @@ b{color:#004085}
 </div>
 
 <script>
+let myName = localStorage.getItem("myName") || "";
+
 function loadMessages(){
-  fetch('/messages').then(r=>r.json()).then(data=>{
-    let chat = document.getElementById("chat");
-    chat.innerHTML = "";
-    data.forEach(m=>{
-      chat.innerHTML += `<p><b>${m[0]}:</b> ${m[1]}</p>`;
-    });
-    chat.scrollTop = chat.scrollHeight;
-  });
-}
-
-function send(){
-  let name = document.getElementById("name").value;
-  let msg = document.getElementById("msg").value;
-  if(name && msg){
-    fetch('/send', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name: name, msg: msg})
-    }).then(()=> {
-      document.getElementById("msg").value = "";
-      loadMessages();
-    });
-  }
-}
-
-document.getElementById("msg").addEventListener("keypress", function(e){
-  if(e.key === "Enter") send();
-});
-
-// A tir ah load nghal
-loadMessages();
-// 3 sec dan ah check chiah, page pump a refresh lo
-setInterval(loadMessages, 3000);
-</script>
-</body>
-</html>
-'''
-
-@app.route("/")
-def home():
-    return render_template_string(HTML)
-
-@app.route("/messages")
-def get_messages():
-    return jsonify(messages)
-
-@app.route("/send", methods=["POST"])
-def send_message():
-    data = request.get_json()
-    messages.append((data['name'], data['msg']))
-    return jsonify({"ok": True})
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+  fetch('/messages').then(r=>r

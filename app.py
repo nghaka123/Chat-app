@@ -1,8 +1,9 @@
-import os
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, flash, redirect # flash + redirect add
 from supabase import create_client
+import os
 
 app = Flask(__name__)
+app.secret_key = "secret123" # flash tan hian a ngai
 
 # Hei hi i URL leh KEY tak tak dah rawh
 SUPABASE_URL = "https://dytydxoihelpgtsavsb.supabase.co"

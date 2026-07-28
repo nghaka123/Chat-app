@@ -1,11 +1,10 @@
 import streamlit as st
-import os
 from supabase import create_client
 from datetime import datetime
 
-# ========== 1. SUPABASE CONNECT ==========
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+# ========== 1. SUPABASE CONNECT - KEY DAH SA ==========
+SUPABASE_URL = "https://dytytdxoihelpgtavsvb.supabase.co"
+SUPABASE_KEY = "sb_publishable_jzIDCwW6cU_t-vCiUsrK7g_0RfE-IOv"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # ========== 2. PAGE SETTING ==========
@@ -29,6 +28,7 @@ with st.form("message_form", clear_on_submit=True):
             }
             supabase.table("messages").insert(data).execute()
             st.success("I thawn thei e!")
+            st.rerun()
         else:
             st.warning("Hming leh Message dah kim rawh")
 

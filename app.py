@@ -1,60 +1,66 @@
-import streamlit as st
-from supabase import create_client
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from supabase import create_client, Client
+import os
 
-SUPABASE_URL = "https://dytytdxoihelpgtavsvb.supabase.co"
-SUPABASE_KEY = "sb_publishable_jzIDCwW6cU_t-vCiUsrK7g_0RfE-IOv"
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+app = Flask(__name__)
+app.secret_key = "ka_secret_key_thlak_la" # he mi hi thlak la
 
-st.set_page_config(page_title="Ka Chat App", page_icon="💬")
-st.title("💬 Ka Live Chat App")
+# STEP 1: I Supabase URL leh ANON KEY dah
+SUPABASE_URL = "https://qytqsxawhq1ptqsviab.supabase.co"
+SUPABASE_KEY = "b_a-pu4llshl_1n7DAMsU_sG61qSx7A_8HBF-1V" # I anon key full dah
 
-# ========== LOGIN/SIGNUP ==========
-if "user" not in st.session_state:
-    st.session_state.user = None
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-if st.session_state.user is None:
-    tab1, tab2 = st.tabs(["Login", "Signup"])
-    
-    with tab1:
-        email = st.text_input("Email", key="login_email")
-        password = st.text_input("Password", type="password", key="login_pass")
-        if st.button("Login"):
-            try:
-                res = supabase.auth.sign_in_with_password({"email": email, "password": password})
-                st.session_state.user = res.user
-                st.rerun()
-            except Exception as e:
-                st.error("Login a dik lo")
-    
-    with tab2:
-        email = st.text_input("Email", key="signup_email")
-        password = st.text_input("Password", type="password", key="signup_pass")
-        if st.button("Signup"):
-            try:
-                res = supabase.auth.sign_up({"email": email, "password": password})
-                st.success("Signup a hlawhtling! Email check rawh")
-            except Exception as e:
-                st.error("Email hi a lo awm tawh")
-else:
-    st.write(f"Welcome, {st.session_state.user.email}")
-    if st.button("Logout"):
-        supabase.auth.sign_out()
-        st.session_state.user = None
-        st.rerun()
-    
-    st.divider()
-    # Heta tang hian message form a kal chhunzawm
-    with st.form("message_form", clear_on_submit=True):
-        message = st.text_input("I message")
-        submitted = st.form_submit_button("Thawn 🔥")
-        if submitted and message:
-            data = {
-                "name": st.session_state.user.email,
-                "message": message,
-                "created_at": datetime.now().isoformat()
-            }
-            supabase.table("messages").insert(data).execute()
-            st.rerun()
+@app.route("/", methods=["GET", "POST"])
+def home():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        action = request.form["action"]
 
-    # Message en na...
+        try:
+            if action == "signup":
+                # SIGNUP
+                res = supabase.auth.sign_up({
+                    "email": email,
+                    "password": password
+                })
+                if res.user:
+                    flash("Signup a hlawhtling! Tun ah Login rawh", "success")
+                else:
+                    flash("Signup a hlawhtling lo: " + res.error.message, "error")
+
+            elif action == "login":
+                # LOGIN
+                res = supabase.auth.sign_in_with_password({
+                    "email": email,
+                    "password": password
+                })
+                if res.user:
+                    session["user"] = res.user.email
+                    return redirect(url_for("chat"))
+                else:
+                    flash("Login a hlawhtling lo: " + res.error.message, "error")
+
+        except Exception as e:
+            flash("Error: " + str(e), "error")
+
+    return render_template("index.html")
+
+
+@app.route("/chat")
+def chat():
+    if "user" not in session:
+        return redirect(url_for("home"))
+    return render_template("chat.html", user=session["user"])
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    supabase.auth.sign_out()
+    return redirect(url_for("home"))
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

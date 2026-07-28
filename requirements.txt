@@ -1,4 +1,3 @@
-Flask
+flask
+supabase
 gunicorn
-    streamlit
-    supabase

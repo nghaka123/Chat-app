@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, flash, redirect # flash + redirect add
+from flask import Flask, render_template, request, jsonify, flask, redirect # flash + redirect add
 from supabase import create_client
 import os
 

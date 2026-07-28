@@ -1,19 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from supabase import create_client, Client
+from flask import Flask, render_template, request, jsonify
+from supabase import create_client
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY")
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+# Hei hi i URL leh KEY tak tak dah rawh
+SUPABASE_URL = "https://dytydxoihelpgtsavsb.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5dHl0ZHhvaWhlbHBndGF2c3ZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNTQwNjksImV4cCI6MjEwMDczMDA2OX0.ShuZ_oFuZPDXhjzPMV4GDOYk1qarjOJUfXPxafVjdSA"  # i anon key sei deuh
 
-# Check nan - Logs ah a rawn lang nge en dawn
-print("=== DEBUG ===")
-print("URL:", SUPABASE_URL)
-print("KEY:", SUPABASE_KEY)
-
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route("/", methods=["GET", "POST"])
 def home():

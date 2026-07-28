@@ -1,15 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from supabase import create_client, Client
 import os
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from supabase import create_client, Client
 
 app = Flask(__name__)
-app.secret_key = "ka_secret_key_thlak_la" # he mi hi thlak la
+app.secret_key = "ka_secret_key_thlak_la"
 
-# STEP 1: I Supabase URL leh ANON KEY dah
-SUPABASE_URL = "https://qytqsxawhq1ptqsviab.supabase.co"
-SUPABASE_KEY = "b_a-pu4llshl_1n7DAMsU_sG61qSx7A_8HBF-1V" # I anon key full dah
+# STEP 1: Render Env atangin kan la
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -20,31 +21,15 @@ def home():
 
         try:
             if action == "signup":
-                # SIGNUP
-                res = supabase.auth.sign_up({
-                    "email": email,
-                    "password": password
-                })
-                if res.user:
-                    flash("Signup a hlawhtling! Tun ah Login rawh", "success")
-                else:
-                    flash("Signup a hlawhtling lo: " + res.error.message, "error")
-
+                res = supabase.auth.sign_up({"email": email, "password": password})
+                flash("Signup tluang! Email check rawh")
             elif action == "login":
-                # LOGIN
-                res = supabase.auth.sign_in_with_password({
-                    "email": email,
-                    "password": password
-                })
-                if res.user:
-                    session["user"] = res.user.email
-                    return redirect(url_for("chat"))
-                else:
-                    flash("Login a hlawhtling lo: " + res.error.message, "error")
-
+                res = supabase.auth.sign_in_with_password({"email": email, "password": password})
+                session["user"] = res.user.email
+                return redirect(url_for("chat"))
         except Exception as e:
-            flash("Error: " + str(e), "error")
-
+            flash(f"Error: {str(e)}")
+    
     return render_template("index.html")
 
 
@@ -58,7 +43,6 @@ def chat():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    supabase.auth.sign_out()
     return redirect(url_for("home"))
 
 

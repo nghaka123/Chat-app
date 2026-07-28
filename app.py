@@ -5,12 +5,13 @@ from supabase import create_client, Client
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 
-# He lai 2 hi a pawimawh ber
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-print("URL:", SUPABASE_URL) # Check nan
-print("KEY:", SUPABASE_KEY[:10]) # Check nan
+# Check nan - Logs ah a rawn lang nge en dawn
+print("=== DEBUG ===")
+print("URL:", SUPABASE_URL)
+print("KEY:", SUPABASE_KEY)
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -41,3 +42,6 @@ def chat():
 def logout():
     session.pop("user", None)
     return redirect(url_for("home"))
+
+if __name__ == "__main__":
+    app.run(debug=True)

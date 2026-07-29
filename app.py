@@ -38,16 +38,19 @@ def signup():
 def home():
     return render_template("login.html")
 
-@app.route("/login", methods=["POST"]) # POST chiah phal
+from flask import Flask, render_template, request, redirect, session, flash
+
+@app.route("/login", methods=["POST"])
 def login():
     email = request.form["email"]
     password = request.form["password"]
     try:
-        auth.sign_in_with_email_and_password(email, password)
+        user = auth.sign_in_with_email_and_password(email, password)
         session["user"] = email
         return redirect("/chat")
-    except:
-        flash("Email emaw Password emaw a dik lo", "danger")
+    except Exception as e:
+        print("LOGIN ERROR:", e)  # Render Logs ah a lo lang ang
+        flash("Email emaw Password emaw a dik lo: " + str(e), "danger")
         return redirect("/")
 
 @app.route("/chat")

@@ -33,11 +33,13 @@ def chat():
     if 'user' not in session:
         return redirect(url_for('login'))
     
-    # Message zawng zawng lak chhuah
     try:
-        messages = supabase.table("messages").select("*").order("created_at").execute()
-        messages_data = messages.data
-    except:
+        # Test connection
+        test = supabase.table("messages").select("*").limit(1).execute()
+        print("Supabase Connected:", test)
+        messages_data = test.data
+    except Exception as e:
+        print("Supabase Error:", e)  # Render Logs ah a rawn lang ang
         messages_data = []
     
     return render_template("chat.html", user=session['user'], messages=messages_data)

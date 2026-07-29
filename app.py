@@ -43,7 +43,14 @@ def login():
 @app.route("/chat")
 def chat_page():
     if "user" in session:
-        return render_template("chat.html", user=session["user"])
+        # config zawng zawng html ah thawn chhuk
+        config = {
+            "apiKey": os.environ.get("API_KEY"),
+            "authDomain": os.environ.get("AUTH_DOMAIN"),
+            "databaseURL": os.environ.get("DATABASE_URL"),
+            "projectId": os.environ.get("PROJECT_ID")
+        }
+        return render_template("chat.html", user=session["user"], config=config)
     return redirect("/")
 
 @app.route("/send", methods=["POST"])

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login / Signup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial; background: #075E54; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 350px; }
+        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #075E54; color: white; border: none; border-radius: 5px; font-size: 16px; }
+        h2 { text-align: center; color: #075E54; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Chat App Login</h2>
+        <form method="POST" action="/login">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <br>
+        <form method="POST" action="/signup">
+            <input type="email" name="email" placeholder="Email thar" required>
+            <input type="password" name="password" placeholder="Password thar" required>
+            <button type="submit" style="background:#25D366;">Signup</button>
+        </form>
+    </div>
+</body>
+</html>

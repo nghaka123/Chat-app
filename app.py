@@ -18,3 +18,4 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 def home():
     if 'user' in session:
         return redirect(url_for('chat'))
+    return redirect(url_for('login'))

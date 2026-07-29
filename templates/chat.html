@@ -1,68 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
     <style>
-        body { font-family: Arial; background: #ece5dd; margin:0; }
-        .header { background: #075E54; color: white; padding: 15px; font-size: 18px; }
-        #message {
-    background: #dcf8c6;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 5px;
-    max-width: 70%;
+        body { 
+            background: #ece5dd; 
+            font-family: Arial; 
+            margin: 0;
+            padding: 0;
         }
-        .msg { margin: 5px 0; padding: 8px; border-radius: 7px; max-width: 70%; }
-        .me { background: #dcf8c6; margin-left: auto; }
-        .other { background: white; }
-        .input { display: flex; padding: 10px; background: white; position: fixed; bottom:0; width:100%; }
-        .input input { flex:1; padding:10px; border:1px solid #ccc; border-radius:20px; }
-        .input button { background:#075E54; color:white; border:none; padding:10px 20px; border-radius:20px; margin-left:5px; }
+        .header {
+            background: #075e54;
+            color: white;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header a { color: white; text-decoration: none; }
+        #messages { 
+            padding: 10px; 
+            height: 75vh; 
+            overflow-y: scroll;
+        }
+        .message { 
+            background: #dcf8c6; 
+            border-radius: 8px; 
+            padding: 8px 12px; 
+            margin: 5px 0; 
+            max-width: 70%; 
+            float: right;
+            clear: both;
+        }
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #msg { 
+            flex: 1; 
+            padding: 10px; 
+            border-radius: 20px; 
+            border: 1px solid #ccc;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin-left: 5px;
+            border-radius: 20px;
+            border: none;
+            background: #075e54;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <div class="header">Chat - {{ user }} <a href="/logout" style="float:right; color:white;">Logout</a></div>
+    <div class="header">
+        <span>Chat - {{ user }}</span>
+        <a href="/logout">Logout</a>
+    </div>
+    
     <div id="messages"></div>
-    <div class="input">
+    
+    <div class="input-area">
         <input id="msg" placeholder="Message type...">
-        <button onclick="send()">Send</button>
+        <button onclick="sendMsg()">Send</button>
     </div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script>
-  var firebaseConfig = {
-    apiKey: "{{ config.apiKey }}",
-    authDomain: "{{ config.authDomain }}",
-    databaseURL: "{{ config.databaseURL }}",
-    projectId: "{{ config.projectId }}"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var db = firebase.database();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  function send(){
-    var text = document.getElementById("msg").value;
-    if(text){
-      db.ref("messages").push({user: "{{ user }}", text: text, time: Date.now()});
-      document.getElementById("msg").value = "";
-    }
-  }
+  const firebaseConfig = {{ config|tojson }};
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const messagesRef = ref(db, "messages");
 
-  db.ref("messages").on("child_added", function(snapshot){
-    var data = snapshot.val();
-    var div = document.createElement("div");
-    div.className = "msg " + (data.user == "{{ user }}" ? "me" : "other");
-    div.innerHTML = '<b>'+data.user+':</b> '+data.text;
+  onChildAdded(messagesRef, (data) => {
+    const msg = data.val();
+    const div = document.createElement("div");
+    div.className = "message"; // <-- heihi a pawimawh
+    div.innerText = msg.user + ": " + msg.text;
     document.getElementById("messages").appendChild(div);
   });
+
+  function sendMsg() {
+    const text = document.getElementById("msg").value;
+    if(text.trim() !== ""){
+        push(messagesRef, { user: "{{ user }}", text: text });
+        document.getElementById("msg").value = "";
+    }
+  }
+  window.sendMsg = sendMsg;
 </script>
 </body>
 </html>
-.message {
-    background: #dcf8c6;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 5px;
-    max-width: 70%;
-}

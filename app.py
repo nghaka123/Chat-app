@@ -64,3 +64,12 @@ def chat_page():
 def logout():
     session.pop("user", None)
     return redirect("/")
+
+@app.route('/setting')
+def setting():
+    return render_template('setting.html')
+
+@app.route('/logout')
+def logout():
+    session.clear() # login data delete
+    return redirect('/login')

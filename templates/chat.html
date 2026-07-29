@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Chat</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>body{font-family:sans-serif}.chat-box{height:400px;overflow-y:scroll;border:1px solid #ddd;padding:10px;margin-bottom:10px}
+.msg{margin:5px 0}.you{color:blue;font-weight:bold}</style></head>
+<body>
+<h2>Welcome {{ user }}</h2> <a href="/logout">Logout</a>
+<div class="chat-box">
+{% for msg in messages %}
+<div class="msg"><span class="you">{{ msg.user }}:</span> {{ msg.message }}</div>
+{% endfor %}
+</div>
+<form method="POST" action="/send">
+<input type="text" name="message" placeholder="Type message..." required style="width:80%;padding:10px">
+<button type="submit" style="padding:10px">Send</button>
+</form>
+</body></html>

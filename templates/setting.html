@@ -1,2 +1,21 @@
-<img src="{{ session.get('profile_pic', 'https://i.pravatar.cc/80') }}" 
-     class="w-16 h-16 rounded-full border-2 border-gray-300">
+<!-- Profile -->
+<div class="bg-white p-6 flex items-center gap-4">
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    
+    <!-- HEI HI LABEL CHHUNG AH FILE INPUT DAH -->
+    <label for="fileInput" class="cursor-pointer">
+      <img src="{{ session.get('profile_pic', 'https://i.pravatar.cc/80') }}" 
+           class="w-24 h-24 rounded-full border-4 border-[#00695C] object-cover hover:opacity-80">
+    </label>
+
+    <!-- Thup a awm ang -->
+    <input id="fileInput" type="file" name="file" accept="image/*" class="hidden" onchange="this.form.submit()">
+
+  </form>
+
+  <div>
+    <p class="font-bold text-lg">I Hming</p>
+    <p class="text-gray-500 text-sm">i@email.com</p>
+    <p class="text-xs text-[#00695C] mt-1">Pic hmeh la, thlak rawh</p>
+  </div>
+</div>

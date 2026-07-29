@@ -6,9 +6,8 @@ app = Flask(__name__)
 app.secret_key = "secret123" # flash tan hian a ngai
 
 # Hei hi i URL leh KEY tak tak dah rawh
-SUPABASE_URL = "https://dytydxoihelpgtsavsb.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5dHl0ZHhvaWhlbHBndGF2c3ZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNTQwNjksImV4cCI6MjEwMDczMDA2OX0.ShuZ_oFuZPDXhjzPMV4GDOYk1qarjOJUfXPxafVjdSA"  # i anon key sei deuh
-
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route("/", methods=["GET", "POST"])

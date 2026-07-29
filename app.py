@@ -39,4 +39,4 @@ def chat():
         return redirect(url_for("login"))
 
     if db is None:
-        return "Firebase not connected. Check FIRE
+        return "Firebase not connected. Check FIRE"

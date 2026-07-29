@@ -60,3 +60,29 @@ def send_message():
         db = firebase.database()
         db.child("messages").push({"user": session["user"], "text": message})
     return redirect("/chat")
+
+from datetime import datetime
+
+@app.route("/chat/<room>")
+def chat_room(room):
+    if "user" in session:
+        config = {
+            "apiKey": os.environ.get("API_KEY"),
+            "authDomain": os.environ.get("AUTH_DOMAIN"),
+            "databaseURL": os.environ.get("DATABASE_URL"),
+            "projectId": os.environ.get("PROJECT_ID")
+        }
+        return render_template("chat.html", user=session["user"], room=room, config=config)
+    return redirect("/")
+
+@app.route("/send/<room>", methods=["POST"])
+def send_message(room):
+    if "user" in session:
+        message = request.form["message"]
+        db = firebase.database()
+        db.child("rooms").child(room).child("messages").push({
+            "user": session["user"], 
+            "text": message,
+            "time": datetime.now().strftime("%H:%M")
+        })
+    return redirect(f"/chat/{room}")

@@ -1,62 +1,66 @@
-import os
 from flask import Flask, render_template, request, redirect, session
-import firebase_admin
-from firebase_admin import credentials, auth, db
+import pyrebase
+import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "secret123")
+app.secret_key = os.environ.get("SECRET_KEY")
 
-# Firebase Admin init
-cred = credentials.Certificate({
-  "type": "service_account",
-  "project_id": os.environ.get("PROJECT_ID"),
-  "private_key_id": os.environ.get("PRIVATE_KEY_ID"),
-  "private_key": os.environ.get("PRIVATE_KEY").replace('\\n', '\n'),
-  "client_email": os.environ.get("CLIENT_EMAIL"),
-  "client_id": os.environ.get("CLIENT_ID"),
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-})
-firebase_admin.initialize_app(cred, {
-    'databaseURL': os.environ.get("DATABASE_URL")
-})
+config = {
+  "apiKey": os.environ.get("API_KEY"),
+  "authDomain": os.environ.get("AUTH_DOMAIN"),
+  "databaseURL": os.environ.get("DATABASE_URL"),
+  "projectId": os.environ.get("PROJECT_ID"),
+  "storageBucket": os.environ.get("STORAGE_BUCKET"),
+  "messagingSenderId": os.environ.get("MESSAGING_SENDER_ID"),
+  "appId": os.environ.get("APP_ID")
+}
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
 
-@app.route("/signup", methods=["POST"])
-def signup():
-    email = request.form["email"]
-    password = request.form["password"]
-    try:
-        user = auth.create_user(email=email, password=password)
-        session["user"] = email
-        return redirect("/chat")
-    except:
-        return "Signup a hlawhtling lo"
-
-@app.route("/login", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
-    # firebase-admin hian login direct a nei lo. Kan awlsam nan session chiah kan dah
-    session["user"] = request.form["email"]
-    return redirect("/chat")
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        try:
+            auth.sign_in_with_email_and_password(email, password)
+            session["user"] = email
+            return redirect("/chat")
+        except:
+            return render_template("login.html", error="Email or Password dik lo")
+    return render_template("login.html")
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        try:
+            auth.create_user_with_email_and_password(email, password)
+            return redirect("/")
+        except:
+            return render_template("signup.html", error="Email a awm tawh a niang")
+    return render_template("signup.html")
+
+@app.route("/forgot", methods=["GET", "POST"])
+def forgot():
+    if request.method == "POST":
+        email = request.form["email"]
+        try:
+            auth.send_password_reset_email(email)
+            return render_template("forgot.html", msg="Email ah reset link kan thawn")
+        except:
+            return render_template("forgot.html", error="Email a awm lo")
+    return render_template("forgot.html")
 
 @app.route("/chat")
 def chat_page():
-    if "user" in session:
-        return render_template("chat.html", user=session["user"], config={
-            "apiKey": os.environ.get("API_KEY"),
-            "authDomain": os.environ.get("AUTH_DOMAIN"),
-            "databaseURL": os.environ.get("DATABASE_URL"),
-            "projectId": os.environ.get("PROJECT_ID")
-        })
-    return redirect("/")
+    if "user" not in session:
+        return redirect("/")
+    return render_template("chat.html", user=session["user"], config=config)
 
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect("/")
-
-if __name__ == "__main__":
-    app.run(debug=True)

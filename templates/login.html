@@ -6,22 +6,23 @@
   <title>Login - Chat-app</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<!-- min-h-screen leh flex kan hmang tawh -->
-<body class="bg-[#F5F1E8] flex items-center justify-center min-h-screen p-4">
+
+
+  <body class="bg-[#F5F1E8] flex items-center justify-center min-h-screen p-0 m-0">
   
-  <!-- hian max-w-md kan hmang a, a zau vak lo tur -->
-  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+  <!-- max-w-md paihbo la w-full h-full dah -->
+  <div class="bg-white w-full h-full flex-col justify-center p-6 shadow-none">
     
-    <h1 class="text-3xl font-bold text-center mb-6 text-[#00695C]">Chat-app</h1>
+    <h1 class="text-3xl font-bold text-center mb-8 text-[#00695C]">Chat-app</h1>
     
-    <form action="#" method="POST">
+    <form action="#" method="POST" class="w-full">
       
       <input 
         type="email" 
         name="email"
         placeholder="Email" 
         required
-        class="w-full p-3 border-gray-300 rounded-xl mb-3 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
       <input 
@@ -29,10 +30,10 @@
         name="password"
         placeholder="Password" 
         required
-        class="w-full p-3 border-gray-300 rounded-xl mb-2 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-3 border-gray-300 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
-      <div class="text-right mb-4">
+      <div class="text-right mb-6">
         <a href="/forgot" class="text-sm text-[#00695C] font-medium hover:underline">Forgot Password?</a>
       </div>
       
@@ -42,8 +43,8 @@
       
     </form>
     
-    <p class="text-center mt-4 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
+    <p class="text-center mt-6 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
   </div>
 
-</body>
+  </body>
 </html>

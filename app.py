@@ -24,14 +24,22 @@ except Exception as e:
 
 @app.route("/", methods=["GET", "POST"])
 def login():
+    if db is None:
+        return "ERROR: Firebase not connected. Check FIREBASE_KEY in Render Environment"
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        
-        if db is None:
-            return "ERROR: Firebase not connected"
-        
+
         # User zawng
         user_ref = db.collection("users").document(username).get()
         if user_ref.exists:
             user_data = user_ref.to_dict()
+            if check_password_hash(user_data["password"], password):
+                session["username"] = username
+                return redirect(url_for("chat"))
+
+        flash("Username or Password a dik lo")
+        return redirect(url_for("login")) # <-- heihi kan belh
+
+    return render_template("login.html") # <-- heihi a tawp ber ah a awm ngei tur

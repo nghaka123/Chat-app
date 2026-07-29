@@ -76,7 +76,7 @@ def chat_room(room):
     return redirect("/")
 
 @app.route("/send/<room>", methods=["POST"])
-def send_message(room):
+def send_message_room(room):  # <-- Hming hi thlak
     if "user" in session:
         message = request.form["message"]
         db = firebase.database()

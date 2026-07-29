@@ -45,3 +45,11 @@ def chat_page():
     if "user" in session:
         return render_template("chat.html", user=session["user"])
     return redirect("/")
+
+@app.route("/send", methods=["POST"])
+def send_message():
+    if "user" in session:
+        message = request.form["message"]
+        db = firebase.database()
+        db.child("messages").push({"user": session["user"], "text": message})
+    return redirect("/chat")

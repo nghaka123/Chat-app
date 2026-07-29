@@ -3,33 +3,51 @@
 <head>
     <title>Chat App</title>
     <style>
-        body { font-family: Arial; background: #e5ddd5; margin: 0; }
-        .header { background: #075e54; color: white; padding: 15px; }
-        .chat-box { height: 80vh; overflow-y: scroll; padding: 10px; }
-        .msg { background: white; padding: 8px 12px; border-radius: 8px; margin: 5px 0; max-width: 70%; }
-        .me { background: #dcf8c6; margin-left: auto; }
-        .input { position: fixed; bottom: 0; width: 100%; display: flex; background: #f0f0f0; padding: 10px; }
-        .input input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ccc; }
-        .input button { background: #075e54; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-left: 5px; }
+        body { font-family: Arial; background: #f0f0f0; margin: 0; }
+        .header { background: #075E54; color: white; padding: 10px; display: flex; justify-content: space-between; }
+        #messages { padding: 10px; height: 80vh; overflow-y: scroll; }
+        .msg { background: white; padding: 8px; margin: 5px; border-radius: 8px; max-width: 70%; }
+        .me { background: #DCF8C6; margin-left: auto; }
+        .input-area { position: fixed; bottom: 0; width: 100%; display: flex; padding: 10px; background: white; }
+        .input-area input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ccc; }
+        .input-area button { padding: 10px 15px; margin-left: 5px; border: none; background: #075E54; color: white; border-radius: 50%; }
     </style>
 </head>
 <body>
     <div class="header">
-        <b>Chat App</b> - Welcome {{ username }}! <a href="/logout" style="color:white; float:right;">Logout</a>
-    </div>
-    
-    <div class="chat-box">
-        {% for msg in messages %}
-            <div class="msg {% if msg.user == username %}me{% endif %}">
-                <b>{{ msg.user }}</b><br>
-                {{ msg.text }}
-            </div>
-        {% endfor %}
+        <span>Chat App - Welcome {{ user }}!</span>
+        <a href="/logout" style="color:white;">Logout</a>
     </div>
 
-    <form method="POST" class="input">
-        <input type="text" name="message" placeholder="Message type la..." required>
+    <div id="messages"></div>
+
+    <form class="input-area" method="POST" action="/send">
+        <input type="text" name="message" placeholder="Khaw aw" required>
         <button type="submit">Send</button>
     </form>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+      // I Firebase config dah rawh
+      var firebaseConfig = {
+        apiKey: "{{ config.apiKey }}",
+        authDomain: "{{ config.authDomain }}",
+        databaseURL: "{{ config.databaseURL }}",
+        projectId: "{{ config.projectId }}"
+      };
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.database();
+
+      // Message lo thleng en
+      db.ref("messages").on("child_added", function(snapshot){
+        var data = snapshot.val();
+        var div = document.createElement("div");
+        div.className = "msg " + (data.user == "{{ user }}" ? "me" : "");
+        div.innerHTML = "<b>" + data.user + ":</b> " + data.text;
+        document.getElementById("messages").appendChild(div);
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+      });
+    </script>
 </body>
 </html>

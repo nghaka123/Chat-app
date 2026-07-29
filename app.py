@@ -19,9 +19,6 @@ config = {
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 
-@app.route("/")
-def home():
-    return render_template("login.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():

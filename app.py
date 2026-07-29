@@ -48,8 +48,20 @@ def send():
     if 'user' not in session:
         return redirect(url_for('login'))
     
-    message = request.form["message"]
-    user = session['user']
+    try:
+        message = request.form["message"]
+        user = session['user']
+        
+        supabase.table("messages").insert({
+            "user": user,
+            "message": message
+        }).execute()
+        
+    except Exception as e:
+        print("Error:", e)  # Render Logs ah kan en thei
+        return f"Error: {e}"
+    
+    return redirect(url_for("chat"))
     
     # Supabase ah save
     supabase.table("messages").insert({

@@ -1,6 +1,6 @@
 import os
 import pyrebase
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
@@ -66,5 +66,5 @@ def setting():
 
 @app.route('/logout')
 def logout():
-    session.clear() # login data delete
-    return redirect('/login')
+    session.clear()  # session delete vek
+    return redirect(url_for('login')) # login page ah let

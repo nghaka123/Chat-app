@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, session
 import pyrebase
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = os.environ.get("SECRET_KEY")
 
 config = {
     "apiKey": os.environ.get("API_KEY"),

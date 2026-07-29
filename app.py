@@ -1,42 +1,20 @@
-from flask import Flask, render_template, request, jsonify, flask, redirect # flash + redirect add
-from supabase import create_client
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from supabase import create_client, Client
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "secret123" # flash tan hian a ngai
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "chatapp123")
 
-# Hei hi i URL leh KEY tak tak dah rawh
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Supabase connect
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/")
 def home():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        action = request.form["action"]
-        try:
-            if action == "signup":
-                res = supabase.auth.sign_up({"email": email, "password": password})
-                flash("Signup tluang! Email ah confirm la")
-            elif action == "login":
-                res = supabase.auth.sign_in_with_password({"email": email, "password": password})
-                session["user"] = res.user.email
-                return redirect(url_for("chat"))
-        except Exception as e:
-            flash(f"Error: {str(e)}")
-    return render_template("index.html")
-
-@app.route("/chat")
-def chat():
-    if "user" not in session: return redirect(url_for("home"))
-    return render_template("chat.html", user=session["user"])
-
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect(url_for("home"))
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    if 'user' in session:
+        return redirect(url_for('chat'))

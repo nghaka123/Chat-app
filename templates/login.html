@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Chat-app</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<!-- Body bg cream + padding kan dah -->
-<body class="bg-[#F5F1E8] h-full p-4 sm:p-6">
+<!-- bg cream + padding sir kual -->
+<body class="bg-[#F5F1E8] min-h-screen p-4 flex items-center justify-center">
   
-  <!-- Card hian screen pum a awh, mahse sir ah cream a lang -->
-  <div class="bg-white w-full h-full rounded-2xl shadow-xl flex-col justify-center p-6">
+  <!-- Card hi a san dan tur kan fix -->
+  <div class="bg-white w-full max-w-md rounded-2xl p-8">
     
-    <h1 class="text-4xl font-bold text-center mb-10 text-[#00695C]">Chat-app</h1>
+    <h1 class="text-3xl font-bold text-center mb-8 text-[#00695C]">Chat-app</h1>
     
-    <form action="#" method="POST" class="w-full space-y-4">
+    <form action="#" method="POST" class="space-y-4">
       
       <input 
         type="email" 
         name="email"
         placeholder="Email" 
         required
-        class="w-full p-4 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-3 border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
       <input 
@@ -29,11 +29,21 @@
         name="password"
         placeholder="Password" 
         required
-        class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-3 border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
       <div class="text-right">
         <a href="/forgot" class="text-sm text-[#00695C] font-medium hover:underline">Forgot Password?</a>
       </div>
       
-      <button type="submit" class="w
+      <button type="submit" class="w-full bg-[#00695C] text-white p-3 rounded-lg font-semibold hover:bg-[#004D40]">
+        Login
+      </button>
+      
+    </form>
+    
+    <p class="text-center mt-6 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
+  </div>
+
+</body>
+</html>

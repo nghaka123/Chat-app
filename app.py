@@ -21,7 +21,7 @@ db = firebase.database()
 
 @app.route("/")
 def home():
-    return "<h1 style='text-align:center; margin-top:100px;'>App a thawk</h1><br><a href='/chat'>Chat ah kal</a>"
+    return render_template("index.html")
 
 @app.route("/chat")
 def chat_page():

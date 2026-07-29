@@ -1,18 +1,20 @@
-from flask import Flask, render_template, request, redirect, session
-import pyrebase
 import os
+import pyrebase
+from flask import Flask, render_template, request, redirect, session, flash
 
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-config = {
-  "apiKey": os.getenv("API_KEY"),
-  "authDomain": os.getenv("AUTH_DOMAIN"),
-  "projectId": os.getenv("PROJECT_ID"),
-  "storageBucket": os.getenv("STORAGE_BUCKET"),
-  "messagingSenderId": os.getenv("SENDER_ID"),
-  "appId": os.getenv("APP_ID"),
-  "databaseURL": os.getenv("DATABASE_URL")
+# I Firebase Project Settings atanga copy rawh
+firebaseConfig =  {
+  apiKey: "AIzaSyBqnSp9piRhHBTyBUwIFOs2_U08LpWOj8g",
+  authDomain: "chat-app-1dc73.firebaseapp.com",
+  databaseURL: "https://chat-app-1dc73-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "chat-app-1dc73",
+  storageBucket: "chat-app-1dc73.firebasestorage.app",
+  messagingSenderId: "777889797353",
+  appId: "1:777889797353:web:724827b1d1cd7ab3144c78",
+  measurementId: "G-ZRK14W39BV"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)

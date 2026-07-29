@@ -5,26 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: Arial; background: #ece5dd; margin: 0; padding-bottom: 60px; }
-        .header { background: #075E54; color: white; padding: 10px; position: fixed; top:0; width:100%; display: flex; justify-content: space-between; }
-        #messages { padding: 60px 10px 10px 10px; }
-        .msg { background: white; padding: 8px 12px; margin: 5px 0; border-radius: 8px; max-width: 70%; word-wrap: break-word; }
-        .me { background: #DCF8C6; margin-left: auto; }
-        .input-area { position: fixed; bottom: 0; width: 100%; display: flex; padding: 8px; background: #f0f0f0; box-sizing: border-box; }
+        .header { background: #075E54; color: white; padding: 12px; position: fixed; top:0; width:100%; }
+        #messages { padding: 60px 10px 10px 10px; display: flex; flex-direction: column; }
+        .msg { padding: 8px 12px; margin: 5px 0; border-radius: 8px; max-width: 70%; position: relative; }
+        .me { background: #DCF8C6; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .other { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { font-weight: bold; font-size: 12px; color: #075E54; }
+        .time { font-size: 10px; color: gray; text-align: right; }
+        .input-area { position: fixed; bottom: 0; width: 100%; display: flex; padding: 8px; background: #f0f0f0; }
         .input-area input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ccc; }
         .input-area button { padding: 10px 15px; margin-left: 5px; border: none; background: #075E54; color: white; border-radius: 50%; }
     </style>
 </head>
 <body>
     <div class="header">
-        <span>Chat App</span>
-        <a href="/logout" style="color:white;">Logout</a>
+        <span>Room: {{ room }}</span>
+        <a href="/logout" style="color:white; float:right;">Logout</a>
     </div>
 
     <div id="messages"></div>
 
-    <form class="input-area" method="POST" action="/send">
+    <form class="input-area" method="POST" action="/send/{{ room }}">
         <input type="text" name="message" placeholder="Message ziak rawh" required>
-        <button type="submit">Send</button>
+        <button type="submit">➤</button>
     </form>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -39,12 +42,14 @@
       firebase.initializeApp(firebaseConfig);
       var db = firebase.database();
 
-      // Message lo thleng zawng zawng en
-      db.ref("messages").on("child_added", function(snapshot){
+      db.ref("rooms/{{ room }}/messages").on("child_added", function(snapshot){
         var data = snapshot.val();
         var div = document.createElement("div");
-        div.className = "msg " + (data.user == "{{ user }}" ? "me" : "");
-        div.innerHTML = "<b>" + data.user + ":</b> " + data.text;
+        div.className = "msg " + (data.user == "{{ user }}" ? "me" : "other");
+        div.innerHTML = 
+            (data.user != "{{ user }}" ? '<div class="user">'+data.user+'</div>' : '') +
+            '<div>'+data.text+'</div>' +
+            '<div class="time">'+data.time+'</div>';
         document.getElementById("messages").appendChild(div);
         window.scrollTo(0, document.body.scrollHeight);
       });

@@ -21,7 +21,7 @@ db = firebase.database()
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return "<h1 style='text-align:center; margin-top:100px;'>App a thawk</h1><br><a href='/chat'>Chat ah kal</a>"
 
 @app.route("/chat")
 def chat_page():
@@ -72,7 +72,3 @@ def signup():
 def logout():
     session.pop("user", None)
     return redirect("/")
-
-@app.route("/")
-def home():
-    return "<h1 style='text-align:center; margin-top:100px;'>App a thawk</h1><br><a href='/chat'>Chat ah kal</a>"

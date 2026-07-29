@@ -6,7 +6,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = "secret123_chat_app_key" # heihi thlak danglam thei
 
 # ========== FIREBASE CONNECT ==========
 db = None
@@ -18,28 +18,8 @@ try:
         firebase_admin.initialize_app(cred)
         db = firestore.client()
         print("Firebase Connected Successfully!")
+    else:
+        print("FIREBASE_KEY not found in Environment Variables")
 except Exception as e:
     print("Firebase Error:", e)
 # =======================================
-
-@app.route("/", methods=["GET", "POST"])
-def login():
-    if db is None:
-        return "ERROR: Firebase not connected. Check FIREBASE_KEY in Render Environment"
-
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-
-        # User zawng
-        user_ref = db.collection("users").document(username).get()
-        if user_ref.exists:
-            user_data = user_ref.to_dict()
-            if check_password_hash(user_data["password"], password):
-                session["username"] = username
-                return redirect(url_for("chat"))
-
-        flash("Username or Password a dik lo")
-        return redirect(url_for("login")) # <-- heihi kan belh
-
-    return render_template("login.html") # <-- heihi a tawp ber ah a awm ngei tur

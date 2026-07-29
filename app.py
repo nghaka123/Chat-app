@@ -37,7 +37,11 @@ def signup():
             return redirect("/signup")
     return render_template("signup.html")
 
-@app.route("/login", methods=["POST"])
+@app.route("/", methods=["GET"])  # GET chiah phal
+def home():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"]) # POST chiah phal
 def login():
     email = request.form["email"]
     password = request.form["password"]

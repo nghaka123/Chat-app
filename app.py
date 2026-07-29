@@ -11,11 +11,21 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-@app.route("/")
-def home():
-    if 'user' in session:
-        return redirect(url_for('chat'))
-    return redirect(url_for('login'))
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        return redirect(url_for("chat")) # Tuna tan test nan
+    return render_template("login.html")
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        return redirect(url_for("login"))
+    return render_template("signup.html")
+
+@app.route("/chat")
+def chat():
+    return render_template("chat.html", user="TestUser", messages=[])
 
 
 @app.route("/login", methods=["GET", "POST"]) # <-- hei hi awm ngei tur

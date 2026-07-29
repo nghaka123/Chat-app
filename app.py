@@ -16,6 +16,7 @@ config = {
     "appId": os.environ.get("APP_ID")
 }
 firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
 db = firebase.database()
 
 @app.route("/")
@@ -38,3 +39,30 @@ def send_message():
             "time": datetime.now().strftime("%H:%M")
         })
     return redirect("/chat")
+
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form["email"]
+    password = request.form["password"]
+    try:
+        auth.sign_in_with_email_and_password(email, password)
+        session["user"] = email
+        return redirect("/chat")
+    except:
+        return "Login a hlawhtling lo. Email/password check leh rawh"
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    email = request.form["email"]
+    password = request.form["password"]
+    try:
+        auth.create_user_with_email_and_password(email, password)
+        session["user"] = email
+        return redirect("/chat")
+    except:
+        return "Signup a hlawhtling lo. Email a awm tawh ani thei"
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/")

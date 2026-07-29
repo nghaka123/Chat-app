@@ -1,6 +1,7 @@
 import os
 import pyrebase
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
@@ -17,6 +18,12 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+
+storage = firebase.storage() # <- HEI HI BELH
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -68,3 +75,20 @@ def setting():
 def logout():
     session.clear()  # session delete vek
     return redirect(url_for('login')) # login page ah let
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return redirect('/setting')
+    
+    file = request.files['file']
+    if file.filename == '' or not allowed_file(file.filename):
+        return redirect('/setting')
+    
+    if file:
+        filename = secure_filename(file.filename)
+        # Firebase storage ah upload
+        storage.child("profile_pics/" + session.get('user_id', 'user') + ".jpg").put(file)
+        url = storage.child("profile_pics/" + session.get('user_id', 'user') + ".jpg").get_url(None)
+        session['profile_pic'] = url # URL kan save
+        return redirect('/setting')

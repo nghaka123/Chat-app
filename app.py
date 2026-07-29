@@ -60,11 +60,6 @@ def chat_page():
         return redirect("/")
     return render_template("chat.html", user=session["user"], config=config)
 
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect("/")
-
 @app.route('/setting')
 def setting():
     return render_template('setting.html')

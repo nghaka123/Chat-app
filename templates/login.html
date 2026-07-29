@@ -6,9 +6,11 @@
   <title>Login - Chat-app</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#F5F1E8] flex items-center justify-center min-h-screen p-2">
+<!-- min-h-screen leh flex kan hmang tawh -->
+<body class="bg-[#F5F1E8] flex items-center justify-center min-h-screen p-4">
   
-  <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-xl">
+  <!-- hian max-w-md kan hmang a, a zau vak lo tur -->
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
     
     <h1 class="text-3xl font-bold text-center mb-6 text-[#00695C]">Chat-app</h1>
     
@@ -30,7 +32,6 @@
         class="w-full p-3 border-gray-300 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
-      <!-- FORGOT LINK DIK -->
       <div class="text-right mb-4">
         <a href="/forgot" class="text-sm text-[#00695C] font-medium hover:underline">Forgot Password?</a>
       </div>
@@ -41,7 +42,6 @@
       
     </form>
     
-    <!-- SIGNUP LINK DIK -->
     <p class="text-center mt-4 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
   </div>
 

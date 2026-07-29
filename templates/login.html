@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head><title>Login</title>
-<style>
-body{background:#ece5dd;font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh}
-.box{background:white;padding:30px;border-radius:10px;width:300px}
-input{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:5px}
-button{width:100%;padding:10px;background:#075e54;color:white;border:none;border-radius:5px}
-.error{color:red;font-size:14px}
-a{text-decoration:none;color:#075e54;font-size:14px}
-</style>
+<head>
+  <title>Login - Chat-app</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+<body class="bg-[#F5F1E8] flex items-center justify-center min-h-screen">
+  
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm">
     
-    <h1 class="text-3xl font-bold text-center mb-6">Chat-app</h1>
+    <h1 class="text-3xl font-bold text-center mb-6 text-[#00695C]">Chat-app</h1>
     
     <form>
-      <input type="email" placeholder="Email" class="w-full p-3 border rounded-lg mb-4">
-      <input type="password" placeholder="Password" class="w-full p-3 border rounded-lg mb-4">
-      <button class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold">Login</button>
+      <input type="email" placeholder="Email" class="w-full p-3 border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#00695C]">
+      <input type="password" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-[#00695C]">
+      
+      <!-- Forgot Password Link -->
+      <div class="text-right mb-4">
+        <a href="/forgot-password" class="text-sm text-[#00695C] hover:underline">Forgot Password?</a>
+      </div>
+      
+      <button class="w-full bg-[#00695C] text-white p-3 rounded-lg font-semibold hover:bg-[#004D40]">Login</button>
     </form>
     
-    <p class="text-center mt-4">Account i nei lo em? <a href="/signup" class="text-blue-500">Signup rawh</a></p>
+    <p class="text-center mt-6 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
   </div>
+
 </body>
 </html>

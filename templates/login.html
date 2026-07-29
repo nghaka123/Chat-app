@@ -6,31 +6,41 @@
   <title>Login - Chat-app</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<!-- bg cream + padding sir kual -->
 <body class="bg-[#F5F1E8] min-h-screen p-4 flex items-center justify-center">
   
-  <!-- Card hi a san dan tur kan fix -->
-  <div class="bg-white w-full h-full rounded-2xl p-6">
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
     
     <h1 class="text-3xl font-bold text-center mb-8 text-[#00695C]">Chat-app</h1>
     
     <form action="#" method="POST" class="space-y-4">
       
+      <!-- Email -->
       <input 
         type="email" 
         name="email"
         placeholder="Email" 
         required
-        class="w-full p-3 border-gray-300 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-3 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00695C] focus:border-[#00695C]"
       >
       
-      <input 
-        type="password" 
-        name="password"
-        placeholder="Password" 
-        required
-        class="w-full p-3 border-gray-300 rounded-xl mb-2 focus:outline-none focus:ring-2 focus:ring-[#00695C]"
-      >
+      <!-- Password + Mit lem -->
+      <div class="relative">
+        <input 
+          id="password"
+          type="password" 
+          name="password"
+          placeholder="Password" 
+          required
+          class="w-full p-3 pr-10 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00695C] focus:border-[#00695C]"
+        >
+        <!-- Mit lem button -->
+        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
       
       <div class="text-right">
         <a href="/forgot" class="text-sm text-[#00695C] font-medium hover:underline">Forgot Password?</a>
@@ -44,6 +54,20 @@
     
     <p class="text-center mt-6 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
   </div>
+
+<script>
+  function togglePassword() {
+    const pass = document.getElementById('password');
+    const eye = document.getElementById('eyeIcon');
+    if (pass.type === 'password') {
+      pass.type = 'text';
+      eye.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.71 0 1.4-.07 2.063-.203M9.9 4.024A9.465 9.465 0 0112 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639A10.483 10.483 0 0112 19.5c-2.29 0-4.345-.45-6.134-1.222M9.9 4.024l-2.36-2.36m0 0L3.5 6.5m2.04 2.04L4.5 12l2.04 3.46M15 12l2.04-3.46M15 12l-2.04 3.46M15 12l2.04-3.46" />`;
+    } else {
+      pass.type = 'password';
+      eye.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />`;
+    }
+  }
+</script>
 
 </body>
 </html>

@@ -6,11 +6,11 @@
   <title>Login - Chat-app</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<!-- html leh body ah h-full dah -->
-<body class="bg-white h-full p-0 m-0">
+<!-- Body bg cream + padding kan dah -->
+<body class="bg-[#F5F1E8] h-full p-4 sm:p-6">
   
-  <!-- min-h-screen + justify-center = chung hnuai ah a inhlawm vek -->
-  <div class="bg-white w-full min-h-screen flex flex-col justify-center p-6">
+  <!-- Card hian screen pum a awh, mahse sir ah cream a lang -->
+  <div class="bg-white w-full h-full rounded-2xl shadow-xl flex-col justify-center p-6">
     
     <h1 class="text-4xl font-bold text-center mb-10 text-[#00695C]">Chat-app</h1>
     
@@ -29,21 +29,11 @@
         name="password"
         placeholder="Password" 
         required
-        class="w-full p-4 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00695C]"
+        class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00695C]"
       >
       
       <div class="text-right">
         <a href="/forgot" class="text-sm text-[#00695C] font-medium hover:underline">Forgot Password?</a>
       </div>
       
-      <button type="submit" class="w-full bg-[#00695C] text-white p-4 rounded-xl font-semibold text-lg hover:bg-[#004D40] mt-2">
-        Login
-      </button>
-      
-    </form>
-    
-    <p class="text-center mt-6 text-sm">Account i nei lo em? <a href="/signup" class="text-[#00695C] font-semibold hover:underline">Signup rawh</a></p>
-  </div>
-
-</body>
-</html>
+      <button type="submit" class="w

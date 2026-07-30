@@ -88,10 +88,13 @@ def users():
     if "user" not in session:
         return redirect('/login')
 
+    # Firebase atangin user zawng zawng la
     all_users = db.child("users").get().val()
-    if all_users is None:  # <-- hetah space 4
-        all_users = {}     # <-- hetah pawh space 4. None a nih chuan dict ruak ah chantir
-
+    
+    # User an la awm loh chuan dict ruak ah chantir
+    if all_users is None:
+        all_users = {}
+        
     return render_template('users.html', users=all_users, me=session['user'])
 
 @app.route('/chat/<room_id>', methods=['GET', 'POST'])

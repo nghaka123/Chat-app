@@ -3,38 +3,99 @@
 <head>
     <title>Chat App</title>
     <style>
-    body {
-        margin: 0;
-        background: #f0f0f0;
-        display: flex;
-        flex-direction: column;
-        height: 100vh; /* Screen pum huam */
-    }
+        body { 
+            background: #ece5dd; 
+            font-family: Arial; 
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #075e54;
+            color: white;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header a { color: white; text-decoration: none; }
+        #messages { 
+            padding: 10px; 
+            height: 75vh; 
+            overflow-y: scroll;
+        }
+        .message { 
+            background: #dcf8c6; 
+            border-radius: 8px; 
+            padding: 8px 12px; 
+            margin: 5px 0; 
+            max-width: 70%; 
+            float: right;
+            clear: both;
+        }
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background: white;
+            position: fixed;
+            bottom: 0;
+            width: 60%;
+        }
+        #msg { 
+            flex: 1; 
+            padding: 10px; 
+            border-radius: 20px; 
+            border: 1px solid #ccc;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin-left: 5px;
+            border-radius: 20px;
+            border: none;
+            background: #075e54;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span>Chat - {{ user }}</span>
+        <a href="/logout">Logout</a>
+    </div>
+    
+    <div id="messages"></div>
+    
+    <div class="input-area">
+        <input id="msg" placeholder="Message type...">
+        <button onclick="sendMsg()">Send</button>
+    </div>
 
-    .header {
-        background: #006d5b;
-        color: white;
-        padding: 12px;
-        font-weight: bold;
-    }
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    .chat-box {
-        flex: 1; /* A ruangam zawng zawng a luah */
-        overflow-y: auto; /* A sang a pelh chuan a scroll thei */
-        padding: 10px;
-        background: #ece5dd;
-    }
+  const firebaseConfig = {{ config|tojson }};
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const messagesRef = ref(db, "messages");
 
-    .message {
-        background: #d9fdd3;
-        padding: 8px 12px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        max-width: 70%;
-        margin-left: auto; /* Dinglam ah a awm */
-        word-wrap: break-word;
-    }
+  onChildAdded(messagesRef, (data) => {
+    const msg = data.val();
+    const div = document.createElement("div");
+    div.className = "message"; // <-- heihi a pawimawh
+    div.innerText = msg.user + ": " + msg.text;
+    document.getElementById("messages").appendChild(div);
+  });
 
+  function sendMsg() {
+    const text = document.getElementById("msg").value;
+    if(text.trim() !== ""){
+        push(messagesRef, { user: "{{ user }}", text: text });
+        document.getElementById("msg").value = "";
+    }
+  }
+  window.sendMsg = sendMsg;
+</script>
+</body>
+</html>
     .send-box {
         display: flex;
         padding: 8px;

@@ -61,17 +61,22 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <span>Chat - {{ user }}</span>
-        <a href="/setting" class="text-white">⚙️</a>
+        <div class="header">
+        Chat - {{ session['user'] }}
     </div>
-    
-    <div id="messages"></div>
-    
-    <div class="input-area">
-        <input id="msg" placeholder="Message type...">
-        <button onclick="sendMsg()">Send</button>
+
+    <div class="chat-box" id="chat">
+        {% for msg in messages %}
+            <div class="message">
+                <b>{{ msg.user }}</b>: {{ msg.text }}
+            </div>
+        {% endfor %}
     </div>
+
+    <form class="send-box" method="POST">
+        <input type="text" name="message" placeholder="Message type..." autocomplete="off">
+        <button type="submit">Send</button>
+    </form>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

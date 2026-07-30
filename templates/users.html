@@ -1,9 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users</title>
+</head>
+<body>
 <h2>Chat tur thlang rawh</h2>
-{% for key, data in users.items() %}
-  {% if data.email != me %}
-    {% set room_id = [me, data.email] | sort | join('_') %}
-    <div style="padding:10px; border-bottom:1px solid #ccc;">
-      <a href="/chat/{{ room_id }}">{{ data.email }}</a>
-    </div>
-  {% endif %}
-{% endfor %}
+
+{% if users %}  <!-- users a awm leh awm loh check nan -->
+    {% for key, data in users.items() %}
+        {% if data.email != me %}
+            {% set room_id = [me, data.email] | sort | join('_') %}
+            <div style="padding:10px; border-bottom:1px solid #ccc;">
+                <a href="/chat/{{ room_id }}">{{ data.email }}</a>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>Tunah hian user dang an la awm lo</p>
+{% endif %}
+
+<a href="/logout">Logout</a>
+</body>
+</html>

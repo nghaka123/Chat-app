@@ -2,6 +2,9 @@ import os
 import pyrebase
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 
+def safe_key(email):
+    return email.replace('.', ',')  # . chu , ah kan thlak
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
 
@@ -98,28 +101,24 @@ def users():
     return render_template('users.html', users=all_users, me=session['user'])
 
 @app.route('/chat/<room_id>', methods=['GET', 'POST'])
-def private_chat(room_id):
+def chat(room_id):
     if "user" not in session:
         return redirect('/login')
-
+    
+    me = safe_key(session['user'])
+    room = safe_key(room_id)
+    
     if request.method == 'POST':
-        message = request.form.get('message')
-        if message:
-            db.child("private_chats").child(room_id).push({
-                "user": session['user'],
-                "text": message
-            })
+        msg = request.form['message']
+        db.child("chats").child(room).push({
+            "sender": me,
+            "message": msg,
+            "time": {".sv": "timestamp"}
+        })
         return redirect(f'/chat/{room_id}')
 
-    messages = db.child("private_chats").child(room_id).get().val()
-    msg_list = []
-    if messages:
-        for key, val in messages.items():
-            msg_list.append(val)
-
-    # config pass a ngai bawk
-    return render_template('chat.html',
-                           messages=msg_list,
-                           user=session['user'],
-                           room_id=room_id,
-                           config=config)
+    messages = db.child("chats").child(room).get().val()
+    if messages is None:
+        messages = {}
+        
+    return render_template('chat.html', messages=messages, me=me, room=room_id)

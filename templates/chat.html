@@ -1,59 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <a href="/setting" class="text-white">⚙️</a>
     <title>Chat App</title>
     <style>
-        body { 
-            background: #ece5dd; 
-            font-family: Arial; 
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            background: #075e54;
-            color: white;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .header a { color: white; text-decoration: none; }
-        #messages { 
-            padding: 10px; 
-            height: 75vh; 
-            overflow-y: scroll;
-        }
-        .message { 
-            background: #dcf8c6; 
-            border-radius: 8px; 
-            padding: 8px 12px; 
-            margin: 5px 0; 
-            max-width: 70%; 
-            float: right;
-            clear: both;
-        }
-        .input-area {
-            display: flex;
-            padding: 10px;
-            background: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-        #msg { 
-            flex: 1; 
-            padding: 10px; 
-            border-radius: 20px; 
-            border: 1px solid #ccc;
-        }
-        button { 
-            padding: 10px 20px; 
-            margin-left: 5px;
-            border-radius: 20px;
-            border: none;
-            background: #075e54;
-            color: white;
-        }
+    body {
+        margin: 0;
+        background: #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* Screen pum huam */
+    }
+
+    .header {
+        background: #006d5b;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+    }
+
+    .chat-box {
+        flex: 1; /* A ruangam zawng zawng a luah */
+        overflow-y: auto; /* A sang a pelh chuan a scroll thei */
+        padding: 10px;
+        background: #ece5dd;
+    }
+
+    .message {
+        background: #d9fdd3;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        max-width: 70%;
+        margin-left: auto; /* Dinglam ah a awm */
+        word-wrap: break-word;
+    }
+
+    .send-box {
+        display: flex;
+        padding: 8px;
+        background: white;
+        border-top: 1px solid #ddd;
+    }
+
+    .send-box input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        outline: none;
+    }
+
+    .send-box button {
+        margin-left: 8px;
+        padding: 10px 16px;
+        border: none;
+        background: #006d5b;
+        color: white;
+        border-radius: 20px;
+    }
     </style>
 </head>
 <body>

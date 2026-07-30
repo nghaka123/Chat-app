@@ -88,13 +88,14 @@ def logout():
 
 @app.route('/users')
 def users():
+    # Login loh chuan login page ah tir hawng
     if "user" not in session:
         return redirect('/login')
 
     # Firebase atangin user zawng zawng la
     all_users = db.child("users").get().val()
     
-    # User an la awm loh chuan dict ruak ah chantir
+    # User an la awm loh chuan dict ruak ah chantir - error a veng
     if all_users is None:
         all_users = {}
         

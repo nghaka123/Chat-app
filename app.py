@@ -89,6 +89,7 @@ def users():
         return redirect('/login')
 
     all_users = db.child("users").get().val()
+    if all_users is None:
     return render_template('users.html', users=all_users, me=session['user'])
 
 @app.route('/chat/<room_id>', methods=['GET', 'POST'])

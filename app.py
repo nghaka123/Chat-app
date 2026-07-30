@@ -69,11 +69,6 @@ def forgot():
             return render_template("forgot.html", error="Email a awm lo")
     return render_template("forgot.html")
 
-@app.route("/chat")
-def chat_page():
-    if "user" not in session:
-        return redirect("/")
-    return render_template("chat.html", user=session["user"], config=config)
 
 @app.route('/setting')
 def setting():
@@ -82,6 +77,35 @@ def setting():
 @app.route('/logout')
 def logout():
     session.clear()  # session delete vek
-    return redirect(url_for('login')) # login page ah let
+    return redirect(url_for('login')) # login page ah le
 
+@app.route('/users')
+def users():
+    if "user" not in session:
+        return redirect('/login')
+    
+    all_users = db.child("users").get().val()
+    return render_template('users.html', users=all_users, me=session['user'])
+
+@app.route('/chat/<room_id>', methods=['GET', 'POST'])
+def private_chat(room_id):
+    if "user" not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            db.child("private_chats").child(room_id).push({
+                "user": session['user'], 
+                "text": message
+            })
+        return redirect(f'/chat/{room_id}')
+
+    messages = db.child("private_chats").child(room_id).get().val()
+    msg_list = []
+    if messages:
+        for key, val in messages.items():
+            msg_list.append(val)
+    
+    return render_template('chat.html', messages=msg_list)
 

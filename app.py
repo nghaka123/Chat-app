@@ -78,17 +78,19 @@ def logout():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    if "user" not in session: # login lo chu dang
+        return redirect('/login')
+        
     if 'file' not in request.files:
         return redirect('/setting')
-    
+
     file = request.files['file']
     if file.filename == '' or not allowed_file(file.filename):
         return redirect('/setting')
-    
+
     if file:
-        filename = secure_filename(file.filename)
-        # Firebase storage ah upload
-        storage.child("profile_pics/" + session.get('user_id', 'user') + ".jpg").put(file)
-        url = storage.child("profile_pics/" + session.get('user_id', 'user') + ".jpg").get_url(None)
-        session['profile_pic'] = url # URL kan save
+        user_id = session.get('user')
+        storage.child(f"profile_pics/{user_id}.jpg").put(file)
+        url = storage.child(f"profile_pics/{user_id}.jpg").get_url(None)
+        session['profile_pic'] = url
         return redirect('/setting')

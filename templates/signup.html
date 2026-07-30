@@ -19,7 +19,16 @@ a{text-decoration:none;color:#075e54;font-size:14px}
 <input name="password" type="password" placeholder="Password" required>
 <button>Signup</button>
 </form>
-<a href="/">Login na lam ah kir</a>
+  {% if message %}
+  {% if msg_type == "success" %}
+    <p style="color: green; margin-top: 10px; font-weight: bold;">{{ message }}</p>
+    <a href="/login">Login page ah kal rawh</a>
+  {% else %}
+    <p style="color: red; margin-top: 10px;">{{ message }}</p>
+  {% endif %}
+{% endif %}
+  
+<a href="/login">Login na lam ah kir</a>
 </div>
 </body>
 </html>

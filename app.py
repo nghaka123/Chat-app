@@ -3,7 +3,7 @@ import pyrebase
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 
 def safe_key(email):
-    return email.replace('.', ',')  # . chu , ah kan thlak
+    return email.replace('.', ',') #. chu, ah kan thlak
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
@@ -20,8 +20,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
-db = firebase.database() # <-- HEI HI BELH
-
+db = firebase.database()
 storage = firebase.storage()
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -43,7 +42,7 @@ def login():
         try:
             auth.sign_in_with_email_and_password(email, password)
             session["user"] = email
-            return redirect("/users") # <-- HEI HI THLAK /chat ai ah
+            return redirect("/users")
         except:
             return render_template("login.html", error="Email or Password dik lo")
     return render_template("login.html")
@@ -57,8 +56,8 @@ def signup():
         password = request.form.get('password')
         try:
             user = auth.create_user_with_email_and_password(email, password)
-            # User list ah save bawk
-            db.child("users").child(email.replace(".", ",")).set({"email": email})
+            # User list ah save bawk - safe_key kan hmang
+            db.child("users").child(safe_key(email)).set({"email": email})
             message = "Signup Successful! Please Login"
             msg_type = "success"
         except:
@@ -88,38 +87,37 @@ def logout():
 
 @app.route('/users')
 def users():
-    # Login loh chuan login page ah tir hawng
     if "user" not in session:
         return redirect('/login')
 
-    # Firebase atangin user zawng zawng la
     all_users = db.child("users").get().val()
-    
-    # User an la awm loh chuan dict ruak ah chantir - error a veng
     if all_users is None:
         all_users = {}
-        
+
     return render_template('users.html', users=all_users, me=session['user'])
 
 @app.route('/chat/<room_id>', methods=['GET', 'POST'])
 def chat(room_id):
     if "user" not in session:
         return redirect('/login')
-    
-    me = safe_key(session['user'])
+
+    me = session['user'] # template ah email pangngai kan hmang
+    me_safe = safe_key(session['user'])
     room = safe_key(room_id)
-    
+
     if request.method == 'POST':
         msg = request.form['message']
-        db.child("chats").child(room).push({
-            "sender": me,
+        # HEI HI THLAK - chats -> private_chats
+        db.child("private_chats").child(room).push({
+            "sender": me_safe,
             "message": msg,
             "time": {".sv": "timestamp"}
         })
         return redirect(f'/chat/{room_id}')
 
-    messages = db.child("chats").child(room).get().val()
+    # HEI PAWH THLAK - chats -> private_chats
+    messages = db.child("private_chats").child(room).get().val()
     if messages is None:
         messages = {}
-        
+
     return render_template('chat.html', messages=messages, me=me, room=room_id)

@@ -37,17 +37,26 @@ def login():
             return render_template("login.html", error="Email or Password dik lo")
     return render_template("login.html")
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
+    message = None  # Message dahna tur kan siam lawk
+    msg_type = None # success nge error hriat nan
+
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
         try:
             auth.create_user_with_email_and_password(email, password)
-            return redirect("/")
+            message = "Signup Successful! Please Login"  # Hei hi a rawn lang ang
+            msg_type = "success"
+        
         except:
-            return render_template("signup.html", error="Email a awm tawh a niang")
-    return render_template("signup.html")
+            message = "Email hi a lo awm tawh"
+            msg_type = "error"
+
+    # Page ngai ah kan let leh a, message nen
+    return render_template('signup.html', message=message, msg_type=msg_type)
 
 @app.route("/forgot", methods=["GET", "POST"])
 def forgot():

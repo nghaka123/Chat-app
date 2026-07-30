@@ -6,7 +6,7 @@ def safe_key(email):
     return email.replace('.', ',') #. chu, ah kan thlak
 
 def get_room_id(user1, user2):
-    # Tu hmasa pawh ni se room name a inang vek tur - A pawimawh ber
+    # Tu hmasa pawh ni se room name a inang vek tur
     users = sorted([safe_key(user1), safe_key(user2)])
     return f"{users[0]}_{users[1]}"
 
@@ -27,10 +27,6 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
 storage = firebase.storage()
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def home():
@@ -100,14 +96,14 @@ def users():
 
     return render_template('users.html', users=all_users, me=session['user'])
 
-@app.route('/chat/<other_user>', methods=['GET', 'POST']) # room_id → other_user
+@app.route('/chat/<other_user>', methods=['GET', 'POST'])
 def chat(other_user):
     if "user" not in session:
         return redirect('/login')
 
     me = session['user']
     me_safe = safe_key(me)
-    room = get_room_id(me, other_user) # HEI HI NGAI PAWIMAWH
+    room = get_room_id(me, other_user) # HEI HI PAWIMAWH
 
     if request.method == 'POST':
         msg = request.form['message']
@@ -125,4 +121,4 @@ def chat(other_user):
             val['id'] = key
             messages.append(val)
 
-    return render_template('chat.html', messages=messages, me=me_safe, room=other_user)
+    return render_template('chat.html', messages=messages, me=me_safe, room=room)

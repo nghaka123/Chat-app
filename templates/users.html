@@ -2,23 +2,39 @@
 <html>
 <head>
     <title>Users</title>
+    <style>
+        body { font-family: Arial; background: #ece5dd; padding: 20px; }
+        h2 { color: #075e54; }
+        .user-list a { 
+            display: block; 
+            background: white; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            color: black;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .user-list a:hover { background: #dcf8c6; }
+    </style>
 </head>
 <body>
-<h2>Chat tur thlang rawh</h2>
+    <h2>Chat tur thlang rawh</h2>
+    <a href="/logout">Logout</a>
+    <hr>
 
-{% if users %}  <!-- users a awm leh awm loh check nan -->
-    {% for key, data in users.items() %}
-        {% if data.email != me %}
-            {% set room_id = [me, data.email] | sort | join('_') %}
-            <div style="padding:10px; border-bottom:1px solid #ccc;">
-                <a href="/chat/{{ room_id }}">{{ data.email }}</a>
-            </div>
+    <div class="user-list">
+    {% for key, user in users.items() %}
+        {% if user.email != me %}  <!-- Mahni chu kan hide -->
+        <a href="/chat/{{ user.email }}">
+            <b>{{ user.email }}</b>
+        </a>
         {% endif %}
     {% endfor %}
-{% else %}
-    <p>Tunah hian user dang an la awm lo</p>
-{% endif %}
+    </div>
 
-<a href="/logout">Logout</a>
+    {% if users|length <= 1 %}
+        <p>Tuman an la signup lo</p>
+    {% endif %}
 </body>
 </html>

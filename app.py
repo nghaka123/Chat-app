@@ -101,13 +101,12 @@ def chat(room_id):
     if "user" not in session:
         return redirect('/login')
 
-    me = session['user'] # template ah email pangngai kan hmang
+    me = session['user']
     me_safe = safe_key(session['user'])
     room = safe_key(room_id)
 
     if request.method == 'POST':
         msg = request.form['message']
-        # HEI HI THLAK - chats -> private_chats
         db.child("private_chats").child(room).push({
             "sender": me_safe,
             "message": msg,
@@ -115,9 +114,14 @@ def chat(room_id):
         })
         return redirect(f'/chat/{room_id}')
 
-    # HEI PAWH THLAK - chats -> private_chats
-    messages = db.child("private_chats").child(room).get().val()
-    if messages is None:
-        messages = {}
+    # HEI HI THLAK
+    messages_data = db.child("private_chats").child(room).get().val()
+    messages = []
+    if messages_data:
+        for key, val in messages_data.items():
+            val['id'] = key
+            messages.append(val)
 
-    return render_template('chat.html', messages=messages, me=me, room=room_id)
+    return render_template('chat.html', messages=messages, me=me_safe, room=room_id)
+
+

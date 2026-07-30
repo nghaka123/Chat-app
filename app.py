@@ -1,7 +1,6 @@
 import os
 import pyrebase
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
@@ -76,24 +75,4 @@ def logout():
     session.clear()  # session delete vek
     return redirect(url_for('login')) # login page ah let
 
-UPLOAD_FOLDER = 'temp'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True) # temp folder siam
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if "user" not in session:
-        return redirect('/login')
-        
-    file = request.files['file']
-    if file and allowed_file(file.filename):
-        user_id = session.get('user')
-        filename = secure_filename(f"{user_id}.jpg")
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(filepath) # 1. temp ah save phawt
-        
-        storage.child(f"profile_pics/{filename}").put(filepath) # 2. chutah upload
-        url = storage.child(f"profile_pics/{filename}").get_url(None)
-        session['profile_pic'] = url
-        os.remove(filepath) # 3. temp delete
-        return redirect('/setting')
-    return redirect('/setting')

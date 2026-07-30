@@ -17,8 +17,9 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+db = firebase.database() # <-- HEI HI BELH
 
-storage = firebase.storage() # <- HEI HI BELH
+storage = firebase.storage()
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 def allowed_file(filename):
@@ -27,9 +28,9 @@ def allowed_file(filename):
 @app.route('/')
 def home():
     if "user" in session:
-        return redirect('/users') # A lo login tawh chuan users page ah
+        return redirect('/users')
     else:
-        return redirect('/login') # A la login loh chuan login page ah
+        return redirect('/login')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -39,30 +40,27 @@ def login():
         try:
             auth.sign_in_with_email_and_password(email, password)
             session["user"] = email
-            return redirect("/chat")
+            return redirect("/users") # <-- HEI HI THLAK /chat ai ah
         except:
             return render_template("login.html", error="Email or Password dik lo")
     return render_template("login.html")
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    message = None  # Message dahna tur kan siam lawk
-    msg_type = None # success nge error hriat nan
-
+    message = None
+    msg_type = None
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        
         try:
-            auth.create_user_with_email_and_password(email, password)
-            message = "Signup Successful! Please Login"  # Hei hi a rawn lang ang
+            user = auth.create_user_with_email_and_password(email, password)
+            # User list ah save bawk
+            db.child("users").child(email.replace(".", ",")).set({"email": email})
+            message = "Signup Successful! Please Login"
             msg_type = "success"
-        
         except:
             message = "Email hi a lo awm tawh"
             msg_type = "error"
-
-    # Page ngai ah kan let leh a, message nen
     return render_template('signup.html', message=message, msg_type=msg_type)
 
 @app.route("/forgot", methods=["GET", "POST"])
@@ -76,21 +74,20 @@ def forgot():
             return render_template("forgot.html", error="Email a awm lo")
     return render_template("forgot.html")
 
-
 @app.route('/setting')
 def setting():
     return render_template('setting.html')
 
 @app.route('/logout')
 def logout():
-    session.clear()  # session delete vek
-    return redirect(url_for('login')) # login page ah le
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route('/users')
 def users():
     if "user" not in session:
         return redirect('/login')
-    
+
     all_users = db.child("users").get().val()
     return render_template('users.html', users=all_users, me=session['user'])
 
@@ -103,7 +100,7 @@ def private_chat(room_id):
         message = request.form.get('message')
         if message:
             db.child("private_chats").child(room_id).push({
-                "user": session['user'], 
+                "user": session['user'],
                 "text": message
             })
         return redirect(f'/chat/{room_id}')
@@ -113,6 +110,10 @@ def private_chat(room_id):
     if messages:
         for key, val in messages.items():
             msg_list.append(val)
-    
-    return render_template('chat.html', messages=msg_list)
 
+    # config pass a ngai bawk
+    return render_template('chat.html',
+                           messages=msg_list,
+                           user=session['user'],
+                           room_id=room_id,
+                           config=config)

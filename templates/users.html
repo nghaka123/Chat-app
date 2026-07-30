@@ -1,0 +1,9 @@
+<h2>Chat tur thlang rawh</h2>
+{% for key, data in users.items() %}
+  {% if data.email != me %}
+    {% set room_id = [me, data.email] | sort | join('_') %}
+    <div style="padding:10px; border-bottom:1px solid #ccc;">
+      <a href="/chat/{{ room_id }}">{{ data.email }}</a>
+    </div>
+  {% endif %}
+{% endfor %}

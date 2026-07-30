@@ -5,6 +5,11 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 def safe_key(email):
     return email.replace('.', ',') #. chu, ah kan thlak
 
+def get_room_id(user1, user2):
+    # Tu hmasa pawh ni se room name a inang vek tur - A pawimawh ber
+    users = sorted([safe_key(user1), safe_key(user2)])
+    return f"{users[0]}_{users[1]}"
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY","secret123")
 
@@ -56,7 +61,6 @@ def signup():
         password = request.form.get('password')
         try:
             user = auth.create_user_with_email_and_password(email, password)
-            # User list ah save bawk - safe_key kan hmang
             db.child("users").child(safe_key(email)).set({"email": email})
             message = "Signup Successful! Please Login"
             msg_type = "success"
@@ -96,14 +100,14 @@ def users():
 
     return render_template('users.html', users=all_users, me=session['user'])
 
-@app.route('/chat/<room_id>', methods=['GET', 'POST'])
-def chat(room_id):
+@app.route('/chat/<other_user>', methods=['GET', 'POST']) # room_id → other_user
+def chat(other_user):
     if "user" not in session:
         return redirect('/login')
 
     me = session['user']
-    me_safe = safe_key(session['user'])
-    room = safe_key(room_id)
+    me_safe = safe_key(me)
+    room = get_room_id(me, other_user) # HEI HI NGAI PAWIMAWH
 
     if request.method == 'POST':
         msg = request.form['message']
@@ -112,9 +116,8 @@ def chat(room_id):
             "message": msg,
             "time": {".sv": "timestamp"}
         })
-        return redirect(f'/chat/{room_id}')
+        return redirect(f'/chat/{other_user}')
 
-    # HEI HI THLAK
     messages_data = db.child("private_chats").child(room).get().val()
     messages = []
     if messages_data:
@@ -122,6 +125,4 @@ def chat(room_id):
             val['id'] = key
             messages.append(val)
 
-    return render_template('chat.html', messages=messages, me=me_safe, room=room_id)
-
-
+    return render_template('chat.html', messages=messages, me=me_safe, room=other_user)
